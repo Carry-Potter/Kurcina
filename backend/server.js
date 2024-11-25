@@ -112,7 +112,7 @@ const authenticateAdmin = (req, res, next) => {
   return res.status(403).json({ message: 'Zabranjen pristup' }); // Ako nije admin, vrati 403
 };
 // Nova ruta za proveru zauzetih termina
-app.get('/api/zauzeti-termini', async (req, res) => {
+app.get('/zauzeti-termini', async (req, res) => {
   try {
     const { datum } = req.query;
     const pocetakDana = new Date(datum);
@@ -139,7 +139,7 @@ app.get('/api/zauzeti-termini', async (req, res) => {
   }
 });
 // Nova ruta za dobijanje termina od danas
-app.get('/api/termini-od-danas', async (req, res) => {
+app.get('/termini-od-danas', async (req, res) => {
   try {
     const danas = new Date();
     danas.setHours(0, 0, 0, 0); // Postavite vreme na početak dana
@@ -151,7 +151,7 @@ app.get('/api/termini-od-danas', async (req, res) => {
 });
 
 // Ruta za kreiranje novog termina
-app.post('/api/termini', async (req, res) => { 
+app.post('/termini', async (req, res) => { 
   console.log('Primljeni podaci:', req.body); // Dodajte ovo
   try {
     const { datum, vreme, email, ime, usluga, uslugaId, telefon } = req.body; 
@@ -219,7 +219,7 @@ app.post('/api/termini', async (req, res) => {
 });
 
 // Ruta za dobijanje svih termina (opciono, za testiranje)
-app.get('/api/termini', authenticateToken, async (req, res) => { // Zaštićena ruta
+app.get('/termini', authenticateToken, async (req, res) => { // Zaštićena ruta
   try {
     const termini = await Termin.find();
     res.json(termini);
@@ -229,7 +229,7 @@ app.get('/api/termini', authenticateToken, async (req, res) => { // Zaštićena 
 });
 
 // Nova ruta za dobijanje termina za određeni dan
-app.get('/api/termini-po-danu', authenticateToken, async (req, res) => { // Zaštićena ruta
+app.get('/termini-po-danu', authenticateToken, async (req, res) => { // Zaštićena ruta
   try {
     const { datum } = req.query;
     const pocetakDana = new Date(datum);
@@ -253,7 +253,7 @@ app.get('/api/termini-po-danu', authenticateToken, async (req, res) => { // Zaš
 
 
 // Ruta za logovanje
-app.post('/api/login', async (req, res) => {
+app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -274,7 +274,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Ruta za registraciju
-app.post('/api/register', async (req, res) => {
+app.post('/register', async (req, res) => {
   console.log('Primljeni podaci za registraciju:', req.body); // Dodajte ovo
   const { firstName, lastName, email, password, phone } = req.body;
   try {
@@ -313,7 +313,7 @@ app.post('/api/register', async (req, res) => {
 });
 
 // Ažuriranje radnog vremena
-app.put('/api/working-hours', authenticateToken, async (req, res) => {
+app.put('/working-hours', authenticateToken, async (req, res) => {
   const updates = req.body; // Očekujemo niz objekata
   try {
     const updatedHours = await Promise.all(updates.map(async ({ day, open, close }) => {
@@ -330,7 +330,7 @@ app.put('/api/working-hours', authenticateToken, async (req, res) => {
 });
 
 // Dobijanje radnog vremena
-app.get('/api/working-hours',  async (req, res) => {
+app.get('/working-hours',  async (req, res) => {
   try {
     const workingHours = await WorkingHours.find();
     res.json(workingHours); // Uverite se da je workingHours niz
@@ -340,7 +340,7 @@ app.get('/api/working-hours',  async (req, res) => {
 });
 
 // Ruta za kreiranje radnog vremena
-app.post('/api/working-hours', authenticateToken, async (req, res) => {
+app.post('/working-hours', authenticateToken, async (req, res) => {
   const { day, open, close } = req.body;
   try {
     const newWorkingHour = new WorkingHours({ day, open, close });
@@ -402,7 +402,7 @@ app.get('/auth/google/callback', passport.authenticate('google', {
 });
 
 // Ruta za prijavu
-app.post('/api/login', async (req, res) => {
+app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -423,7 +423,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Ruta za kreiranje nove usluge
-app.post('/api/services', authenticateToken, async (req, res) => {
+app.post('/services', authenticateToken, async (req, res) => {
   const { name, gender, duration, price } = req.body;
   try {
     const newService = new Service({ name, gender, duration, price });
@@ -437,7 +437,7 @@ app.post('/api/services', authenticateToken, async (req, res) => {
 
 
 // Ruta za brisanje usluge
-app.delete('/api/services/:id', authenticateToken, async (req, res) => {
+app.delete('/services/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     await Service.findByIdAndDelete(id);
@@ -448,7 +448,7 @@ app.delete('/api/services/:id', authenticateToken, async (req, res) => {
 });
 
 // Ruta za dobijanje usluge po ID-u
-app.get('/api/services/:id', async (req, res) => {
+app.get('/services/:id', async (req, res) => {
   try {
     const service = await Service.findById(req.params.id);
     if (!service) {
@@ -462,7 +462,7 @@ app.get('/api/services/:id', async (req, res) => {
 
 
 // Ruta za dobijanje svih usluga (javna ruta)
-app.get('/api/services', async (req, res) => {
+app.get('/services', async (req, res) => {
   try {
     const services = await Service.find();
     res.json(services);
@@ -477,7 +477,7 @@ app.get('/api/services', async (req, res) => {
 
 
 // Ruta za ažuriranje usluge
-app.put('/api/services/:id', authenticateToken, async (req, res) => {
+app.put('/services/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { name, gender, duration, price } = req.body;
   try {
@@ -490,7 +490,7 @@ app.put('/api/services/:id', authenticateToken, async (req, res) => {
 
 
 // Ruta za dobijanje broja zakazanih termina po mesecima
-app.get('/api/zakazani-termini-po-mesecima', async (req, res) => {
+app.get('/zakazani-termini-po-mesecima', async (req, res) => {
   try {
     const termini = await Termin.aggregate([
       {
@@ -514,7 +514,7 @@ app.get('/api/zakazani-termini-po-mesecima', async (req, res) => {
     res.status(500).json({ message: 'Greška pri dobijanju termina', error: error.message });
   }
 });
-app.get('/api/ukupna-zarada-po-mesecima', async (req, res) => {
+app.get('/ukupna-zarada-po-mesecima', async (req, res) => {
   try {
     const zarada = await Termin.aggregate([
       {
@@ -550,7 +550,7 @@ app.get('/api/ukupna-zarada-po-mesecima', async (req, res) => {
   }
 });
 // Ruta za dobijanje prosečnog vremena trajanja termina
-app.get('/api/prosecno-vreme-termina', async (req, res) => {
+app.get('/prosecno-vreme-termina', async (req, res) => {
   try {
     const termini = await Termin.aggregate([
       {
@@ -568,7 +568,7 @@ app.get('/api/prosecno-vreme-termina', async (req, res) => {
 });
 
 // Ruta za dobijanje najpopularnijih usluga
-app.get('/api/najpopularnije-usluge', async (req, res) => {
+app.get('/najpopularnije-usluge', async (req, res) => {
   try {
     const usluge = await Termin.aggregate([
       {
@@ -592,7 +592,7 @@ app.get('/api/najpopularnije-usluge', async (req, res) => {
 });
 
 // Ruta za dobijanje termina koje je korisnik zakazao od danas
-app.get('/api/termini-od-danas', authenticateToken, async (req, res) => {
+app.get('/termini-od-danas', authenticateToken, async (req, res) => {
   try {
     const danas = new Date();
     danas.setHours(0, 0, 0, 0); // Postavite vreme na početak dana
@@ -606,7 +606,7 @@ app.get('/api/termini-od-danas', authenticateToken, async (req, res) => {
   }
 });
 // Ruta za otkazivanje termina
-app.delete('/api/termini/:id', authenticateToken, async (req, res) => {
+app.delete('/termini/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     const deletedTermin = await Termin.findByIdAndDelete(id);
@@ -620,7 +620,7 @@ app.delete('/api/termini/:id', authenticateToken, async (req, res) => {
 });
 
 // Ruta za dobijanje aktivnih promocija
-app.get('/api/promotions', async (req, res) => {
+app.get('/promotions', async (req, res) => {
   try {
     const today = new Date();
     const promotions = await Promotion.find({
@@ -632,7 +632,7 @@ app.get('/api/promotions', async (req, res) => {
   }
 });
 // Ruta za kreiranje nove promocije
-app.post('/api/promotions', authenticateToken, async (req, res) => {
+app.post('/promotions', authenticateToken, async (req, res) => {
   const { service, startDate, endDate, requiredAppointments, freeAppointments } = req.body;
   try {
     const newPromotion = new Promotion({
@@ -649,7 +649,7 @@ app.post('/api/promotions', authenticateToken, async (req, res) => {
   }
 });
 // Ruta za dobijanje korisnika koji su zakazali termine za aktivne promocije
-app.get('/api/promotion-users', async (req, res) => {
+app.get('/promotion-users', async (req, res) => {
   try {
     const today = new Date();
     const promotions = await Promotion.find({
@@ -685,7 +685,7 @@ app.get('/api/promotion-users', async (req, res) => {
   }
 });
 
-app.get('/api/all-users', async (req, res) => {
+app.get('/all-users', async (req, res) => {
   try {
     const users = await User.find(); // Uzimanje svih korisnika iz baze
     res.json(users);
@@ -694,7 +694,7 @@ app.get('/api/all-users', async (req, res) => {
     res.status(500).json({ message: 'Greška prilikom dobijanja korisnika' });
   }
 });
-app.get('/api/magacin', authenticateToken, async (req, res) => {
+app.get('/magacin', authenticateToken, async (req, res) => {
   try {
     const items = await PotrosniMaterijal.find(); // Pretpostavljamo da imate model PotrosniMaterijal
     res.json(items);
@@ -704,7 +704,7 @@ app.get('/api/magacin', authenticateToken, async (req, res) => {
 });
 
 // Ruta za dodavanje nove stavke u magacin
-app.post('/api/magacin', authenticateToken, async (req, res) => {
+app.post('/magacin', authenticateToken, async (req, res) => {
   const { code, name, quantity } = req.body;
   try {
     const newItem = new PotrosniMaterijal({ code, name, quantity });
@@ -714,7 +714,7 @@ app.post('/api/magacin', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Greška pri dodavanju stavke u magacin', error: error.message });
   }
 });
-app.put('/api/magacin/:id', authenticateToken, async (req, res) => {
+app.put('/magacin/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { code, name, quantity } = req.body;
   try {
@@ -736,7 +736,7 @@ app.delete('/api/magacin/:id', authenticateToken, async (req, res) => {
 });
 // Ruta za zahtev za resetovanje lozinke
 // Ruta za zahtev za resetovanje lozinke
-app.post('/api/reset-password', async (req, res) => {
+app.post('/reset-password', async (req, res) => {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -776,7 +776,7 @@ app.post('/api/reset-password', async (req, res) => {
 
 
 // Ruta za promenu lozinke
-app.post('/api/change-password/:token', async (req, res) => {
+app.post('/change-password/:token', async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
 
