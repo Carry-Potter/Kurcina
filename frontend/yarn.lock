@@ -8291,10 +8291,10 @@ react-calendar@^5.1.0:
     get-user-locale "^2.2.1"
     warning "^4.0.0"
 
-react-chartjs-2@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-3.3.0.tgz#3f62681645acccc1ab27a9186c70f79d6d417f73"
-  integrity sha512-4Mt0SR2aiUbWi/4762odRBYSnbNKSs4HWc0o3IW43py5bMfmfpeZU95w6mbvtuLZH/M3GsPJMU8DvDc+5U9blQ==
+react-chartjs-2@^4.0.0:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-4.3.1.tgz#9941e7397fb963f28bb557addb401e9ff96c6681"
+  integrity sha512-5i3mjP6tU7QSn0jvb8I4hudTzHJqS8l00ORJnVwI2sYu0ihpj83Lv2YzfxunfxTZkscKvZu2F2w9LkwNBhj6xA==
 
 react-checkbox-group@^5.0.2:
   version "5.0.2"
@@ -10535,7 +10535,7 @@ yocto-queue@^0.1.0:
     react "^18.3.1"
     react-big-calendar "^1.15.0"
     react-calendar "^5.1.0"
-    react-chartjs-2 "^3.3.0"
+    react-chartjs-2 "^4.0.0"
     react-checkbox-group "^5.0.2"
     react-checkbox-list "^0.0.2"
     react-datepicker "^7.5.0"
@@ -10548,4 +10548,4 @@ yocto-queue@^0.1.0:
     redux-thunk "^3.1.0"
     twilio "^5.3.4"
     web-vitals "^2.1.4"
-    zakazivanje "file:C:/Users/ivan1/AppData/Local/Yarn/Cache/v6/npm-zakazivanje-0.1.0-db029e88-0ef0-42a7-8e28-19cd5f001d2a-1732536693976/node_modules/zakazivanje"
+    zakazivanje "file:C:/Users/ivan1/AppData/Local/Yarn/Cache/v6/npm-zakazivanje-0.1.0-1a3a655c-1f41-42f7-aecc-67866c31d853-1732539817114/node_modules/zakazivanje"
