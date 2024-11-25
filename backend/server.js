@@ -822,19 +822,20 @@ const sendReminder = (email, appointmentTime, service) => {
 };
 
 app.put('/update-user', authenticateToken, async (req, res) => {
-  const { userId, updatedData } = req.body;
+  const { userId, firstName, lastName, email, phone } = req.body; // Uzmite sve potrebne podatke
 
   try {
-    
     const user = await User.findById(userId);
     
     if (!user) {
       return res.status(404).json({ message: 'Korisnik nije pronađen' });
     }
 
-    
-    Object.assign(user, updatedData); 
-
+    // Ažurirajte korisničke podatke
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+    user.phone = phone;
 
     await user.save();
 
