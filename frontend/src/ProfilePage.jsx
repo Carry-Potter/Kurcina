@@ -59,32 +59,35 @@ export default function ProfilePage() {
   };
 
   const handleUpdate = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
+  e.preventDefault();
+  const token = localStorage.getItem('token');
 
-    try {
-      const response = await fetch(API_ENDPOINTS.UPDATE_USER, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ firstName, lastName, email, phone }),
-      });
+  
+  const userId = user._id; 
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Greška pri ažuriranju podataka');
-      }
+  try {
+    const response = await fetch(API_ENDPOINTS.UPDATE_USER, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ userId, firstName, lastName, email, phone }), // Dodajte userId ovde
+    });
 
-      const updatedUser = await response.json();
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      setMessage('Podaci su uspešno ažurirani!');
-    } catch (error) {
-      setMessage(error.message);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Greška pri ažuriranju podataka');
     }
-  };
+
+    const updatedUser = await response.json();
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    setMessage('Podaci su uspešno ažurirani!');
+  } catch (error) {
+    setMessage(error.message);
+  }
+};
 
   const handleCancelTermin = async (id) => {
     const token = localStorage.getItem('token');
