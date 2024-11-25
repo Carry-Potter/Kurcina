@@ -821,7 +821,29 @@ const sendReminder = (email, appointmentTime, service) => {
   });
 };
 
+app.put('/update-user', authenticateToken, async (req, res) => {
+  const { userId, updatedData } = req.body;
 
+  try {
+    
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'Korisnik nije pronađen' });
+    }
+
+    
+    Object.assign(user, updatedData); 
+
+
+    await user.save();
+
+    res.status(200).json({ message: 'Korisnik uspešno ažuriran', user });
+  } catch (error) {
+    console.error('Greška prilikom ažuriranja korisnika:', error);
+    res.status(500).json({ message: 'Greška na serveru', error: error.message });
+  }
+});
 
 
 
