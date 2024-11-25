@@ -23,7 +23,7 @@ const nodemailer = require('nodemailer');
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://frizerski-frontend.onrender.com',
   credentials: true, // Omogućava slanje kolačića i autorizacije
 }));
 app.use(bodyParser.json());
@@ -398,7 +398,7 @@ app.get('/auth/google/callback', passport.authenticate('google', {
   failureRedirect: '/login',
 }), (req, res) => {
   // Uspesna prijava, preusmerite na frontend stranicu
-  res.redirect(`http://localhost:3000/?user=${encodeURIComponent(JSON.stringify(req.user))}`);
+  res.redirect(`https://frizerski-frontend.onrender.com/?user=${encodeURIComponent(JSON.stringify(req.user))}`);
 });
 
 // Ruta za prijavu
@@ -748,7 +748,7 @@ app.post('/api/reset-password', async (req, res) => {
     const token = jwt.sign({ id: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
 
     // Link za resetovanje lozinke
-    const resetLink = `http://localhost:3000/reset-password/${token}`;
+    const resetLink = `https://frizerski-frontend.onrender.com/reset-password/${token}`;
 
     // Slanje mejla sa linkom za resetovanje lozinke
     const mailOptions = {
