@@ -821,7 +821,7 @@ const sendReminder = (email, appointmentTime, service) => {
   });
 };
 
-app.put('/api/update-user', authenticateToken, async (req, res) => {
+app.put('/update-user', authenticateToken, async (req, res) => {
   const { firstName, lastName, email, phone } = req.body;
   try {
     const updatedUser = await User.findByIdAndUpdate(
