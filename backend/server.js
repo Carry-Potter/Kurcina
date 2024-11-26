@@ -821,28 +821,23 @@ const sendReminder = (email, appointmentTime, service) => {
   });
 };
 
-app.put('/update-user', authenticateToken, async (req, res) => {
-  const { userId, firstName, lastName, email, phone } = req.body; // Uzmite sve potrebne podatke
-
+app.put('/api/update-user', authenticateToken, async (req, res) => {
+  const { firstName, lastName, email, phone } = req.body;
   try {
-    const user = await User.findById(userId);
-    
-    if (!user) {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id, // Koristimo ID korisnika iz tokena
+      { firstName, lastName, email, phone },
+      { new: true } // Vraća ažurirani dokument
+    );
+
+    if (!updatedUser) {
       return res.status(404).json({ message: 'Korisnik nije pronađen' });
     }
 
-    // Ažurirajte korisničke podatke
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.email = email;
-    user.phone = phone;
-
-    await user.save();
-
-    res.status(200).json({ message: 'Korisnik uspešno ažuriran', user });
+    res.json(updatedUser);
   } catch (error) {
-    console.error('Greška prilikom ažuriranja korisnika:', error);
-    res.status(500).json({ message: 'Greška na serveru', error: error.message });
+    console.error('Greška pri ažuriranju korisnika:', error);
+    res.status(500).json({ message: 'Greška pri ažuriranju korisnika', error: error.message });
   }
 });
 
