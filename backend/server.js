@@ -139,16 +139,7 @@ app.get('/zauzeti-termini', async (req, res) => {
   }
 });
 // Nova ruta za dobijanje termina od danas
-app.get('/termini-od-danas', async (req, res) => {
-  try {
-    const danas = new Date();
-    danas.setHours(0, 0, 0, 0); // Postavite vreme na početak dana
-    const termini = await Termin.find({ datum: { $gte: danas } });
-    res.json(termini);
-  } catch (error) {
-    res.status(500).json({ message: 'Greška pri dobijanju termina', error: error.message });
-  }
-});
+
 
 // Ruta za kreiranje novog termina
 app.post('/termini', async (req, res) => { 
@@ -253,7 +244,7 @@ app.get('/termini-po-danu', authenticateToken, async (req, res) => { // Zaštić
 
 
 // Ruta za logovanje
-app.post('/login', async (req, res) => {
+app.post('/', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -395,7 +386,7 @@ app.get('/auth/google', passport.authenticate('google', {
 
 // Ruta za povratak nakon prijave
 app.get('/auth/google/callback', passport.authenticate('google', {
-  failureRedirect: '/login',
+  failureRedirect: '/',
 }), (req, res) => {
   // Uspesna prijava, preusmerite na frontend stranicu
   res.redirect(`https://frizerski-frontend.onrender.com/?user=${encodeURIComponent(JSON.stringify(req.user))}`);
@@ -591,20 +582,7 @@ app.get('/najpopularnije-usluge', async (req, res) => {
   }
 });
 
-// Ruta za dobijanje termina koje je korisnik zakazao od danas
-app.get('/termini-od-danas', authenticateToken, async (req, res) => {
-  try {
-    const danas = new Date();
-    danas.setHours(0, 0, 0, 0); // Postavite vreme na početak dana
-    const termini = await Termin.find({
-      email: req.user.email, // Filtrirajte termine po emailu korisnika
-      datum: { $gte: danas } // Samo termini od danas
-    });
-    res.json(termini);
-  } catch (error) {
-    res.status(500).json({ message: 'Greška pri dobijanju termina', error: error.message });
-  }
-});
+
 // Ruta za otkazivanje termina
 app.delete('/termini/:id', authenticateToken, async (req, res) => {
   try {
@@ -820,6 +798,23 @@ const sendReminder = (email, appointmentTime, service) => {
     }
   });
 };
+app.get('/api/termini-od-danas', authenticateToken, async (req, res) => {
+  try {
+    
+    console.log('Proveravam email korisnika:', req.user);
+
+    const danas = new Date();
+    danas.setHours(0, 0, 0, 0); 
+    const termini = await Termin.find({
+      email: req.user.email, 
+      datum: { $gte: danas } 
+    });
+    console.log('Pronađeni termini:', termini); 
+    res.json(termini);
+  } catch (error) {
+    res.status(500).json({ message: 'Greška pri dobijanju termina', error: error.message });
+  }
+});
 
 app.put('/update-user', authenticateToken, async (req, res) => {
   const { firstName, lastName, email, phone } = req.body;
