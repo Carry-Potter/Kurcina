@@ -30,14 +30,19 @@ export default function ProfilePage() {
           'Authorization': `Bearer ${token}`,
         },
       });
+    
+      if (!response.ok) {
+        console.error('Greška pri dobijanju termina:', response.statusText);
+        return;
+      }
+    
       const data = await response.json();
       const updatedData = data.map(termin => ({
         ...termin,
         datum: new Date(termin.datum),
-       
       }));
       setTermini(updatedData);
-      console.log(updatedData);
+      console.log('Ažurirani termini:', updatedData);
     };
 
     const fetchPromotions = async () => {
@@ -58,15 +63,8 @@ export default function ProfilePage() {
     } : null;
   };
 
-    const handleUpdate = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    
-    // Validacija podataka
-    if (!firstName || !lastName || !email || !phone) {
-      setMessage('Sva polja su obavezna!');
-      return;
-    }
-
     const token = localStorage.getItem('token');
 
     try {
@@ -213,7 +211,7 @@ export default function ProfilePage() {
           <ul className="mt-2">
             {termini.map((termin) => (
               <li key={termin._id} className="border-b py-2 flex justify-between items-center">
-                {new Date(termin.datum).toLocaleDateString()} - {termin.vreme}:00 - {termin.usluga}
+                {new Date(termin.datum).toLocaleDateString()} - {termin.vreme} - {termin.usluga}
                 <button
                   onClick={() => handleCancelTermin(termin._id)}
                   className="ml-4 text-red-600 hover:text-red-800"
