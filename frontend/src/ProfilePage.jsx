@@ -58,36 +58,40 @@ export default function ProfilePage() {
     } : null;
   };
 
-  const handleUpdate = async (e) => {
-  e.preventDefault();
-  const token = localStorage.getItem('token');
-
-  
-  const userId = user._id; 
-
-  try {
-    const response = await fetch(API_ENDPOINTS.UPDATE_USER, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({ userId, firstName, lastName, email, phone }), // Dodajte userId ovde
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Greška pri ažuriranju podataka');
+    const handleUpdate = async (e) => {
+    e.preventDefault();
+    
+    // Validacija podataka
+    if (!firstName || !lastName || !email || !phone) {
+      setMessage('Sva polja su obavezna!');
+      return;
     }
 
-    const updatedUser = await response.json();
-    setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    setMessage('Podaci su uspešno ažurirani!');
-  } catch (error) {
-    setMessage(error.message);
-  }
-};
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch(API_ENDPOINTS.UPDATE_USER, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ firstName, lastName, email, phone }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Greška pri ažuriranju podataka');
+      }
+
+      const updatedUser = await response.json();
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setMessage('Podaci su uspešno ažurirani!');
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
 
   const handleCancelTermin = async (id) => {
     const token = localStorage.getItem('token');
