@@ -798,7 +798,7 @@ const sendReminder = (email, appointmentTime, service) => {
     }
   });
 };
-app.get('/api/termini-od-danas', authenticateToken, async (req, res) => {
+app.get('/termini-od-danas', authenticateToken, async (req, res) => {
   try {
     
     console.log('Proveravam email korisnika:', req.user);
