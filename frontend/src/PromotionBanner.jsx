@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { CalendarDays, Gift, Clock, Tag } from 'lucide-react'
 import API_ENDPOINTS from './apiConfig';
+
 export default function PromotionBanner() {
   const [promotions, setPromotions] = useState([])
 
@@ -31,38 +32,38 @@ export default function PromotionBanner() {
         <Gift className="mr-3" size={28} />
         <span>Ekskluzivne promocije!</span>
       </h2>
-      <div className="flex justify-center items-center">
+      <div className="flex flex-wrap justify-center items-center">
         {promotions.map((promotion) => (
           <motion.div
             key={promotion._id}
-            className="bg-white rounded-lg p-10 shadow-md transform transition duration-300 hover:scale-105 mx-2 w-8/12 xl:w-4/12"
+            className="bg-white rounded-lg p-6 shadow-md transform transition duration-300 hover:scale-105 mx-2 my-4 w-full sm:w-8/12 md:w-5/12 lg:w-4/12 xl:w-3/12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h3 className="text-3xl font-bold text-gray-800 mb-5">{promotion.service}</h3>
-            <div className="space-y-5">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">{promotion.service}</h3>
+            <div className="space-y-4">
               <p className="text-gray-600 flex items-center">
-                <CalendarDays className="mr-2" size={28} />
+                <CalendarDays className="mr-2" size={24} />
                 <span>
                   <strong>{promotion.requiredAppointments}</strong> zakazanih za{' '}
                   <strong>{promotion.freeAppointments}</strong> gratis!
                 </span>
               </p>
               <p className="text-gray-600 flex items-center">
-                <Clock className="mr-2" size={28} />
+                <Clock className="mr-2" size={24} />
                 <span>
                   {new Date(promotion.startDate).toLocaleDateString()} -{' '}
                   {new Date(promotion.endDate).toLocaleDateString()}
                 </span>
               </p>
               <p className="text-gray-600 flex items-center">
-                <Tag className="mr-2" size={28} />
+                <Tag className="mr-2" size={24} />
                 <span>Uštedite do 30%</span>
               </p>
             </div>
             <button
-              className="mt-8 bg-orange-500 text-white py-4 px-8 rounded-md hover:bg-orange-600 transition duration-300 ease-in-out w-full"
+              className="mt-4 bg-orange-500 text-white py-3 px-6 rounded-md hover:bg-orange-600 transition duration-300 ease-in-out w-full"
               onClick={() => window.location.href = '#booking'}
             >
               Rezervišite odmah
