@@ -67,6 +67,7 @@ export default function LandingPage() {
       setUser(loggedUser);
       setEmail(loggedUser.email);
       setName(loggedUser.firstName);
+       setPhone(loggedUser.phone);
     }
   }, []);
 
@@ -154,24 +155,36 @@ const handleSubmit = async (event) => {
   }
 
   try {
-    // Trajanje termina u minutima (možete ga prilagoditi prema uslugama)
-    const durationInMinutes = 30; // Primer: 30 minuta
     const appointmentPromises = selectedServices.map(async (serviceId, index) => {
       const service = services.find(s => s._id === serviceId);
       if (!service) return; // Ako usluga ne postoji, preskočite
 
       // Izračunajte novo vreme za svaki termin
-      const appointmentTime = new Date(date);
-      if (index > 0) {
-        // Ako nije prvi termin, dodajte trajanje prvog termina
-        appointmentTime.setMinutes(appointmentTime.getMinutes() + durationInMinutes * index);
+      const appointmentTime = new Date(date); // Koristimo datum koji je korisnik izabrao
+      appointmentTime.setHours(time.getHours(), time.getMinutes());
+      if (index === 0) {
+        // Postavljamo vreme direktno iz odabranog vremena za prvu uslugu
+        appointmentTime.setHours(time.getHours(), time.getMinutes());
+      } else {
+        // Za svaku sledeću uslugu dodajte vreme trajanja prethodne usluge
+        const previousService = services.find(s => s._id === selectedServices[index - 1]);
+        if (previousService && previousService.duration) {
+          appointmentTime.setMinutes(appointmentTime.getMinutes() + previousService.duration); // Dodajte trajanje prethodne usluge
+        }
+      }
+
+      // Proverite da li je termin već zauzet
+      const timeString = appointmentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      if (zauzetiTermini.includes(timeString)) {
+        alert(`Termin za uslugu ${service.name} je već zauzet. Molimo izaberite drugi termin.`);
+        return;
       }
 
       const appointmentData = {
         email,
         ime: name,
         datum: appointmentTime.toISOString(), // Konvertujte datum u ISO format
-        vreme: time.getHours() + ':' + time.getMinutes(),
+        vreme: appointmentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Koristite novo vreme
         usluga: service.name, // Uzimamo naziv usluge
         uslugaId: serviceId, // ID usluge
         telefon: phone,
@@ -202,11 +215,10 @@ const handleSubmit = async (event) => {
     // Očistite formu ili postavite poruku o uspehu
     setSuccessMessage('Termini su uspešno zakazani!');
     // Očistite stanje forme
-    setName('');
-    setEmail('');
-    setDate(null);
+    
+    setDate(new Date());
     setTime(new Date());
-    setPhone('');
+    
     setSelectedServices([]);
   } catch (error) {
     console.error('Greška prilikom zakazivanja termina:', error);
