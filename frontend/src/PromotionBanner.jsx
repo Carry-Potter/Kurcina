@@ -63,7 +63,7 @@ export default function PromotionBanner() {
             </div>
             <button
               className="mt-8 bg-orange-500 text-white py-4 px-8 rounded-md hover:bg-orange-600 transition duration-300 ease-in-out w-full"
-              onClick={() => alert(`Rezervišite ${promotion.service} sada!`)}
+              onClick={() => window.location.href = '#booking'}
             >
               Rezervišite odmah
             </button>
