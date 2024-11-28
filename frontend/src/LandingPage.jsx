@@ -120,6 +120,8 @@ const handleDateChange = (date) => {
   if (date && isWorkingDay(date)) {
       setDate(date);
       fetchZauzetiTermini(date.toISOString()); // Prosledi datum u ISO formatu
+ 
+      
   } else {
       alert('Izabrani datum nije radni dan. Molimo izaberite drugi datum.');
   }
@@ -219,6 +221,7 @@ const handleSubmit = async (event) => {
     
     setDate(new Date());
     setTime(new Date());
+    
     
     setSelectedServices([]);
   } catch (error) {
