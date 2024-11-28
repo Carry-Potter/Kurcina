@@ -332,7 +332,7 @@ const handleSubmit = async (event) => {
               ].map((service) => (
                 <div key={service.title} className="relative">
                   <dt>
-                  <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-lightbrown text-white">
+                   <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-[#D2B48C] text-white">
                       <service.icon className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <p className="ml-16 text-lg leading-6 font-medium text-gray-900">{service.title}</p>
