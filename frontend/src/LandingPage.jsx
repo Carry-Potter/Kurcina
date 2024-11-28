@@ -15,14 +15,14 @@ export default function LandingPage() {
   const [gender, setGender] = useState('Muškarac'); // Dodajte stanje za pol
   const [services, setServices] = useState([]); // Stanje za usluge
   const [selectedServices, setSelectedServices] = useState([]);
-  
+  const [phone, setPhone] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [date, setDate] = useState(null); // Postavite na null
   const [time, setTime] = useState('');
   const [service, setService] = useState('')
   const [zauzetiTermini, setZauzetiTermini] = useState([]);
-  const [phone, setPhone] = useState('');
+ 
   const [currentImageIndex, setCurrentImageIndex] = useState(null); // Koristimo null da označimo da nijedna slika nije izabrana
   const [user, setUser] = useState(null);
   const [workingHours, setWorkingHours] = useState([]);
@@ -67,7 +67,7 @@ export default function LandingPage() {
       setUser(loggedUser);
       setEmail(loggedUser.email);
       setName(loggedUser.firstName);
-       setPhone(loggedUser.phone);
+      setPhone(loggedUser.phone);
     }
   }, []);
 
@@ -137,6 +137,7 @@ const handleServiceChange = (serviceId) => {
     prev.includes(serviceId) ? prev.filter(s => s !== serviceId) : [...prev, serviceId]
   );
 };
+
 
 const handleSubmit = async (event) => {
   event.preventDefault(); // Sprečava podrazumevano ponašanje forme
@@ -224,6 +225,7 @@ const handleSubmit = async (event) => {
     console.error('Greška prilikom zakazivanja termina:', error);
   }
 };
+
 
   // Očistite localStorage nakon što se informacija pročita
   useEffect(() => {
@@ -522,7 +524,7 @@ const handleSubmit = async (event) => {
   >
     Zakazivanje
   </button>
-  </section>
+  
   {successMessage && (
     <div className="bg-green-500 text-white p-4 rounded-md text-center">
       {successMessage}
@@ -531,6 +533,7 @@ const handleSubmit = async (event) => {
 </form>
       
     </div>
+    </section>
 
       {/* Testimonials Section */}
       <section className="py-12 bg-gray-50">
