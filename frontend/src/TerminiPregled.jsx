@@ -5,6 +5,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import API_ENDPOINTS from './apiConfig';
 import { TerminiContext } from './TerminiContext'; // Uvezite TerminiContext
 import DatePicker from 'react-datepicker';
+import notification from './notifikacija.mp3'
+
 const localizer = momentLocalizer(moment);
 
 const TerminiPregled = () => {
@@ -15,7 +17,32 @@ const TerminiPregled = () => {
   const [services, setServices] = useState([]);
   const [zauzetiTermini, setZauzetiTermini] = useState([]); 
   const [time, setTime] = useState(new Date());
-  
+  const [previousTermCount, setPreviousTermCount] = useState(0);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(false); // Da li je zvuk omogućen
+
+  useEffect(() => {
+    // Proverite da li se broj termina povećao
+    if (termini.length > previousTermCount && isSoundEnabled) {
+      playNotificationSound(); // Reprodukujte zvuk ako je korisnik omogućio zvuk
+    }
+
+    // Ažurirajte prethodni broj termina
+    setPreviousTermCount(termini.length);
+  }, [termini, previousTermCount, isSoundEnabled]);
+
+  const playNotificationSound = () => {
+    const audio = new Audio(notification); // Putanja do zvučnog fajla
+    console.log('Reprodukujte zvuk:', audio);
+    audio.play().catch((error) => {
+      console.error('Greška prilikom reprodukcije zvuka:', error);
+    });
+  };
+
+  const handleUserInteraction = () => {
+    // Ova funkcija se poziva kada korisnik interaguje sa stranicom
+    setIsSoundEnabled(true); // Omogućite zvuk
+    playNotificationSound(); // Opcionalno, reprodukujte zvuk odmah
+  };
   
   const fetchTermini = async () => {
     const token = localStorage.getItem('token');
@@ -68,22 +95,20 @@ const TerminiPregled = () => {
   };
 
   const events = termini.map(termin => {
-    // Proverite da li je termin.vreme validan string
-    
-
-    // Konvertujte vreme iz 12-satnog formata u 24-satni
-    const dateTime = moment(termin.vreme, 'hh:mm A'); // Koristite moment.js za konverziju
-   
-
-    const hours = dateTime.hours(); // Uzmite sate iz Date objekta
-    const minutes = dateTime.minutes(); // Uzmite minute iz Date objekta
+    const dateTime = moment(termin.vreme, 'hh:mm A'); // Konvertujte vreme iz 12-satnog formata u 24-satni
+    const hours = dateTime.hours();
+    const minutes = dateTime.minutes();
 
     return {
-        title: `${termin.usluga} - ${termin.ime}`,
+        title: `${termin.usluga} - ${termin.ime} (${termin.vreme})`, // Uključite više informacija
         start: new Date(new Date(termin.datum).setHours(hours, minutes)),
         end: new Date(new Date(termin.datum).setHours(hours, minutes) + termin.duration * 60 * 1000),
+        allDay: false, // Postavite na false ako želite da se prikaže kao vremenski termin
+        // Dodajte dodatne informacije ako je potrebno
+        tooltip: `Usluga: ${termin.usluga}\nIme: ${termin.ime}\nVreme: ${termin.vreme}`, // Dodatne informacije
     };
 }).filter(event => event !== null);
+
 
   useEffect(() => {
     fetchTermini(); // Učitajte termine kada se komponenta učita
@@ -204,20 +229,34 @@ const handleSubmit = async (event) => {
   }
 };
 
+
   return (
     <div className="container mx-auto p-6">
+      <button onClick={handleUserInteraction}>Omogući zvuk</button>
       <h2 className="text-3xl font-bold mb-4 text-center">Pregled termina</h2>
-      <div style={{ height: '500px' }}>
-       <Calendar
+      
+      <div style={{ height: '900px' }}> 
+      <Calendar
     localizer={localizer}
     events={events}
     startAccessor="start"
     endAccessor="end"
-    style={{ height: 500 }}
+    style={{ height: 700, width: 'auto' }} // Povećajte širinu kalendara
     views={['week']}
     defaultView="week"
-    step={60}
-    timeslots={1}
+    step={30} 
+    timeslots={4} 
+    eventPropGetter={(event) => ({
+        style: {
+            
+            borderRadius: '5px', // Povećajte zaobljenost
+            opacity: 0.8, // Povećajte prozirnost
+            color: 'white', // Boja teksta
+            display: 'block', // Prikazivanje kao blok
+            height: '300px', // Povećajte visinu termina
+            width: '300px', // Povećajte širinu termina
+        },
+    })}
 />
       </div>
       <h3 className="text-2xl font-bold mt-6 mb-4">Zakazivanje termina</h3>
@@ -234,8 +273,9 @@ const handleSubmit = async (event) => {
                     <option value="">Izaberite uslugu</option>
                     {termini.map((termin, index) => (
                         <option key={`${termin.uslugaId}-${index}`} value={termin.uslugaId}>
-                            {termin.usluga}
+                            {termin.usluga} {termin.duration} min
                         </option>
+                        
                     ))}
                 </select>
             </div>
