@@ -400,6 +400,7 @@ const handleSubmit = async (event) => {
       <PromotionBanner />
 
       {/* Booking Section */}
+      <section id="booking" className="py-12 bg-gray-50">
       <div className="max-w-4xl mx-auto p-8 bg-gray-100 rounded-md shadow-md">
       <h1 className="text-3xl font-bold text-gray-800 mb-4">Zakazivanje Termina</h1>
 
@@ -521,7 +522,7 @@ const handleSubmit = async (event) => {
   >
     Zakazivanje
   </button>
-  
+  </section>
   {successMessage && (
     <div className="bg-green-500 text-white p-4 rounded-md text-center">
       {successMessage}
