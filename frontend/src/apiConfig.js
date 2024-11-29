@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://frizerski-bekend.onrender.com'; 
+const API_BASE_URL = 'http://localhost:5000/api'; 
 
 const API_ENDPOINTS = {
   
@@ -12,7 +12,8 @@ const API_ENDPOINTS = {
   SERVICES: `${API_BASE_URL}/services`,
   TERMINI: `${API_BASE_URL}/termini`,
   PROMOTION_USERS: `${API_BASE_URL}/promotion-users`,
-  
+  TERMINI_ZA_KORISNIKA: `${API_BASE_URL}/termini-za-korisnika`,
+  PREGLED_TERMINA: `${API_BASE_URL}/pregled-termina`,
   ZAUZETI_TERMINI: `${API_BASE_URL}/zauzeti-termini`,
   ZAKAZANI_TERMINI_PO_MESECIMA: `${API_BASE_URL}/zakazani-termini-po-mesecima`,
    MAGACIN: `${API_BASE_URL}/magacin`,
