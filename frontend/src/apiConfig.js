@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://frizerski-bekend.onrender.com/api'; 
+const API_BASE_URL = 'https://frizerski-bekend.onrender.com'; 
 
 
 const API_ENDPOINTS = {
