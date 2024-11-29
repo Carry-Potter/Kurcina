@@ -224,194 +224,193 @@ const maxTermini = Math.max(...terminiData.map(item => item.count));
   
   return (
     <div className="max-w-4xl mx-auto p-8 bg-gray-100 rounded-md shadow-md">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Admin Stranica</h1>
-      <div className="flex justify-between">
-        <div className="w-1/3">
-          <TerminiChart data={terminiData} />
-        </div>
-        <div className="w-1/2">
-          <Statistics />
-        </div>
-      </div>
-    {monthWithMaxTermini && (
-      <div className="mt-4">
-        <h3 className="text-lg font-semibold">Mesec sa najviše zakazanih termina: {monthWithMaxTermini.month}</h3>
-        <p>Broj zakazanih termina trenutno: {monthWithMaxTermini.count}</p>
-      </div>
-    )}
-      <h2 className="text-2xl font-semibold text-gray-700 mb-4">Radno vreme</h2>
-      <table className="w-full text-left">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="px-4 py-2">Dan</th>
-            <th className="px-4 py-2">Otvoreno</th>
-            <th className="px-4 py-2">Zatvoreno</th>
-            <th className="px-4 py-2">Neradni dan</th>
-            <th className="px-4 py-2">Akcije</th>
+  <h1 className="text-3xl font-bold text-gray-800 mb-4">Admin Stranica</h1>
+  <div className="flex flex-col md:flex-row justify-between">
+    <div className="w-full md:w-1/3 mb-4 md:mb-0">
+      <TerminiChart data={terminiData} />
+    </div>
+    <div className="w-full md:w-1/2">
+      <Statistics />
+    </div>
+  </div>
+  
+  {monthWithMaxTermini && (
+    <div className="mt-4">
+      <h3 className="text-lg font-semibold">Mesec sa najviše zakazanih termina: {monthWithMaxTermini.month}</h3>
+      <p>Broj zakazanih termina trenutno: {monthWithMaxTermini.count}</p>
+    </div>
+  )}
+
+  <h2 className="text-2xl font-semibold text-gray-700 mb-4">Radno vreme</h2>
+  <div className="overflow-x-auto">
+    <table className="w-full text-left">
+      <thead>
+        <tr className="bg-gray-200">
+          <th className="px-4 py-2">Dan</th>
+          <th className="px-4 py-2">Otvoreno</th>
+          <th className="px-4 py-2">Zatvoreno</th>
+          <th className="px-4 py-2">Neradni dan</th>
+          <th className="px-4 py-2">Akcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        {daysOfWeek.map((day) => (
+          <tr key={day} className="border-b border-gray-200">
+            <td className="px-4 py-2">{day}</td>
+            <td className="px-4 py-2">
+              <input
+                type="time"
+                value={formatTime(hoursInput[day]?.open) || ''}
+                onChange={(e) => handleChange(day, 'open', e.target.value)}
+                disabled={hoursInput[day]?.isClosed}
+                className="border border-gray-300 rounded-md p-2"
+              />
+            </td>
+            <td className="px-4 py-2">
+              <input
+                type="time"
+                value={formatTime(hoursInput[day]?.close) || ''}
+                onChange={(e) => handleChange(day, 'close', e.target.value)}
+                disabled={hoursInput[day]?.isClosed}
+                className="border border-gray-300 rounded-md p-2"
+              />
+            </td>
+            <td className="px-4 py-2">
+              <input
+                type="checkbox"
+                checked={hoursInput[day]?.isClosed || false}
+                onChange={(e) => handleChange(day, 'isClosed', e.target.checked)}
+                className="form-checkbox"
+              />
+            </td>
+            <td className="px-4 py-2">
+              <button onClick={() => handleUpdateHours(day)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Ažuriraj
+              </button>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {daysOfWeek.map((day) => (
-            <tr key={day} className="border-b border-gray-200">
-              <td className="px-4 py-2">{day}</td>
-              <td className="px-4 py-2">
-                <input
-                  type="time"
-                  value={formatTime(hoursInput[day]?.open) || ''}
-                  onChange={(e) => handleChange(day, 'open', e.target.value)}
-                  disabled={hoursInput[day]?.isClosed}
-                  className="border border-gray-300 rounded-md p-2"
-                />
-              </td>
-              <td className="px-4 py-2">
-                <input
-                  type="time"
-                  value={formatTime(hoursInput[day]?.close) || ''}
-                  onChange={(e) => handleChange(day, 'close', e.target.value)}
-                  disabled={hoursInput[day]?.isClosed}
-                  className="border border-gray-300 rounded-md p-2"
-                />
-              </td>
-              <td className="px-4 py-2">
-                <input
-                  type="checkbox"
-                  checked={hoursInput[day]?.isClosed || false}
-                  onChange={(e) => handleChange(day, 'isClosed', e.target.checked)}
-                  className="form-checkbox"
-                />
-              </td>
-              <td className="px-4 py-2">
-                <button onClick={() => handleUpdateHours(day)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Ažuriraj
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        ))}
+      </tbody>
+    </table>
+  </div>
 
-    
-
-      <div className="mt-8 flex justify-center">
-        {Array.isArray(workingHours) && workingHours.map((hours) => (
-          <div key={hours.day} className="text-gray-700 mb-2 mx-4">
-            <span className="font-bold">{hours.day}:</span>
-            <div>{ `${formatTime(hours.open) || 'Neradni dan'} - ${formatTime(hours.close) || 'Neradni dan'}`}</div>
+  <div className="mt-8 flex flex-wrap justify-center">
+    {Array.isArray(workingHours) && (
+      <div className="text-gray-700 mb-2 flex flex-wrap md:flex-nowrap">
+        {workingHours.map((hours) => (
+          <div key={hours.day} className="md:mr-4 mb-2 md:mb-0 flex flex-col items-center">
+            <span className="font-bold text-lg">{hours.day}</span>
+            <span className="ml-1 text-sm">{`${formatTime(hours.open) || 'Neradni dan'} - ${formatTime(hours.close) || 'Neradni dan'}`}</span>
           </div>
         ))}
       </div>
+    )}
+  </div>
 
-      <h2 className="text-2xl font-semibold text-gray-700 mb-4">Usluge</h2>
-      <form onSubmit={handleAddOrUpdateService} className="mb-4">
-        <input
-          type="text"
-          name="name"
-          value={newService.name}
-          onChange={handleServiceChange}
-          placeholder="Naziv usluge"
-          required
-          className="border border-gray-300 rounded-md p-2 mr-2"
-        />
-        <select
-          name="gender"
-          value={newService.gender}
-          onChange={handleServiceChange}
-          className="border border-gray-300 rounded-md p-2 mr-2"
-        >
-          <option value="Muškarac">Muškarac</option>
-          <option value="Žena">Žena</option>
-        </select>
-        <input
-          type="number"
-          name="duration"
-          value={newService.duration}
-          onChange={handleServiceChange}
-          placeholder="Trajanje (min)"
-          required
-          className="border border-gray-300 rounded-md p-2 mr-2"
-        />
-        <input
-          type="number"
-          name="price"
-          value={newService.price}
-          onChange={handleServiceChange}
-          placeholder="Cena"
-          required
-          className="border border-gray-300 rounded-md p-2 mr-2"
-        />
-        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
-          {editingService ? 'Ažuriraj uslugu' : 'Dodaj uslugu'}
-        </button>
-       
-      </form>
-       <input
-  type="text"
-  placeholder="Pretraži usluge..."
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-  className="border border-gray-300 rounded-md p-2"
-/>
+  <h2 className="text-2xl font-semibold text-gray-700 mb-4">Usluge</h2>
+  <form onSubmit={handleAddOrUpdateService} className="mb-4 flex flex-col md:flex-row md:items-center">
+    <input
+      type="text"
+      name="name"
+      value={newService.name}
+      onChange={handleServiceChange}
+      placeholder="Naziv usluge"
+      required
+      className="border border-gray-300 rounded-md p-2 mr-2 mb-2 md:mb-0"
+    />
+    <select
+      name="gender"
+      value={newService.gender}
+      onChange={handleServiceChange}
+      className="border border-gray-300 rounded-md p-2 mr-2 mb-2 md:mb-0"
+    >
+      <option value="Muškarac">Muškarac</option>
+      <option value="Žena">Žena</option>
+    </select>
+    <input
+      type="number"
+      name="duration"
+      value={newService.duration}
+      onChange={handleServiceChange}
+      placeholder="Trajanje (min)"
+      required
+      className="border border-gray-300 rounded-md p-2 mr-2 mb-2 md:mb-0"
+    />
+    <input
+      type="number"
+      name="price"
+      value={newService.price}
+      onChange={handleServiceChange}
+      placeholder="Cena"
+      required
+      className="border border-gray-300 rounded-md p-2 mr-2 mb-2 md:mb-0"
+    />
+    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
+      {editingService ? 'Ažuriraj uslugu' : 'Dodaj uslugu'}
+    </button>
+  </form>
 
-      <table className="w-full text-left">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="px-4 py-2">Naziv</th>
-            <th className="px-4 py-2">Pol</th>
-            <th className="px-4 py-2">Trajanje (min)</th>
-            <th className="px-4 py-2">Cena</th>
-            <th className="px-4 py-2">Akcije</th>
-          </tr>
-        </thead>
-        <tbody>
-          {services.map((service) => (
-            <tr key={service._id} className="border-b border-gray-200">
-              <td className="px-4 py-2">{service.name}</td>
-              <td className="px-4 py-2">{service.gender}</td>
-              <td className="px-4 py-2">{service.duration}</td>
-              <td className="px-4 py-2">{service.price}</td>
-              <td className="px-4 py-2">
-                <button onClick={() => handleEditService(service)} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">
-                  Izmeni
-                </button>
-                <button onClick={() => handleDeleteService(service._id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2">
-                  Obriši
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div>
-      <div className="max-w-4xl mx-auto p-8 bg-gray-100 rounded-md shadow-md">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Kreiraj promociju</h1>
-        <form onSubmit={handleCreatePromotion} className="space-y-4">
-          <div className="flex flex-col">
-            <label htmlFor="service" className="text-sm font-medium text-gray-700">Usluga</label>
-            <input id="service" type="text" value={service} onChange={(e) => setService(e.target.value)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" />
+  <input
+    type="text"
+    placeholder="Pretraži usluge..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    className="border border-gray-300 rounded-md p-2 mb-4"
+  />
+
+  <div className="w-full overflow-x-auto">
+    <div className="flex flex-wrap -mx-4">
+      {services.map((service) => (
+        <div key={service._id} className="w-full md:w-1/2 xl:w-1/3 p-4">
+          <div className="bg-white rounded-md shadow-md p-4">
+            <h2 className="text-lg font-bold mb-2">{service.name}</h2>
+            <p className="text-sm text-gray-600 mb-2">Pol: {service.gender}</p>
+            <p className="text-sm text-gray-600 mb-2">Trajanje (min): {service.duration}</p>
+            <p className="text-sm text-gray-600 mb-2">Cena: {service.price}</p>
+            <div className="flex justify-end mt-4">
+              <button onClick={() => handleEditService(service)} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded mr-2">
+                Izmeni
+              </button>
+              <button onClick={() => handleDeleteService(service._id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                Obriši
+              </button>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <label htmlFor="startDate" className="text-sm font-medium text-gray-700">Datum početka</label>
-            <input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="endDate" className="text-sm font-medium text-gray-700">Datum završetka</label>
-            <input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="requiredAppointments" className="text-sm font-medium text-gray-700">Broj zakazanih termina za gratis</label>
-            <input id="requiredAppointments" type="number" value={requiredAppointments} onChange={(e) => setRequiredAppointments(e.target.value)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="freeAppointments" className="text-sm font-medium text-gray-700">Broj gratis termina</label>
-            <input id="freeAppointments" type="number" value={freeAppointments} onChange={(e) => setFreeAppointments(e.target.value)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" />
-          </div>
-          <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Kreiraj promociju</button>
-        </form>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div className="max-w-4xl mx-auto p-8 bg-gray-100 rounded-md shadow-md mt-8">
+    <h1 className="text-2xl font-bold text-gray-800 mb-4">Kreiraj promociju</h1>
+    <form onSubmit={handleCreatePromotion} className="space-y-4">
+      <div className="flex flex-col">
+        <label htmlFor="service" className="text-sm font-medium text-gray-700">Usluga</label>
+        <input id="service" type="text" value={service} onChange={(e) => setService(e.target.value)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" />
       </div>
-      <Promotion />
-      <PromotionUsers />
-      <AllUsers />
-      </div></div>
+      <div className="flex flex-col">
+        <label htmlFor="startDate" className="text-sm font-medium text-gray-700">Datum početka</label>
+        <input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" />
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="endDate" className="text-sm font-medium text-gray-700">Datum završetka</label>
+        <input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" />
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="requiredAppointments" className="text-sm font-medium text-gray-700">Broj zakazanih termina za gratis</label>
+        <input id="requiredAppointments" type="number" value={requiredAppointments} onChange={(e) => setRequiredAppointments(e.target.value)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" />
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="freeAppointments" className="text-sm font-medium text-gray-700">Broj gratis termina</label>
+        <input id="freeAppointments" type="number" value={freeAppointments} onChange={(e) => setFreeAppointments(e.target.value)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" />
+      </div>
+      <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Kreiraj promociju</button>
+    </form>
+  </div>
+  <Promotion />
+  <PromotionUsers />
+  <AllUsers />
+</div>
   );
 };
 
