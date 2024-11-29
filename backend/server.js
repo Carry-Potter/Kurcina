@@ -835,7 +835,19 @@ app.put('/update-user', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Greška pri ažuriranju korisnika', error: error.message });
   }
 });
-
+app.get('/pregled-termina', authenticateToken, async (req, res) => {
+  try {
+    const danas = new Date();
+    danas.setHours(0, 0, 0, 0); // Postavite vreme na početak dana
+    const termini = await Termin.find({
+      datum: { $gte: danas } // Samo termini od danas
+    });
+    console.log('Pronađeni termini:', termini); // Dodajte log za proveru
+    res.json(termini);
+  } catch (error) {
+    res.status(500).json({ message: 'Greška pri dobijanju termina', error: error.message });
+  }
+});
 
 
 // Pokretanje servera
