@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react'; // Uvezite useContext
 import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar as ReactCalendar } from 'react-calendar'; 
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import API_ENDPOINTS from './apiConfig';
 import { TerminiContext } from './TerminiContext'; // Uvezite TerminiContext
-
+import 'react-big-calendar/lib/css/react-big-calendar.css'; 
 import notification from './notifikacija.mp3'
 ;
 import BookingForm from './BookingForm';
@@ -92,17 +93,15 @@ const TerminiPregled = () => {
   };
 
   const events = termini.map(termin => {
-    const dateTime = moment(termin.vreme, 'hh:mm A'); // Konvertujte vreme iz 12-satnog formata u 24-satni
+    const dateTime = moment(termin.vreme, 'hh:mm A');
     const hours = dateTime.hours();
     const minutes = dateTime.minutes();
 
     return {
-        title: `${termin.usluga} - ${termin.ime} (${termin.vreme})`, // Uključite više informacija
+        title: `${termin.usluga} - ${termin.ime}`, // Prikazivanje usluge i imena
         start: new Date(new Date(termin.datum).setHours(hours, minutes)),
         end: new Date(new Date(termin.datum).setHours(hours, minutes) + termin.duration * 60 * 1000),
-        allDay: false, // Postavite na false ako želite da se prikaže kao vremenski termin
-        // Dodajte dodatne informacije ako je potrebno
-        tooltip: `Usluga: ${termin.usluga}\nIme: ${termin.ime}\nVreme: ${termin.vreme}`, // Dodatne informacije
+        allDay: false,
     };
 }).filter(event => event !== null);
 
@@ -134,30 +133,16 @@ const TerminiPregled = () => {
       <button onClick={handleUserInteraction}>Omogući zvuk</button>
       <h2 className="text-3xl font-bold mb-4 text-center">Pregled termina</h2>
       
-      <div style={{ height: '900px' }}> 
-      <Calendar
-    localizer={localizer}
-    events={events}
-    startAccessor="start"
-    endAccessor="end"
-    style={{ height: 700, width: 'auto' }} // Povećajte širinu kalendara
-    views={['week']}
-    defaultView="week"
-    step={30} 
-    timeslots={4} 
-    eventPropGetter={(event) => ({
-        style: {
-            
-            borderRadius: '5px', // Povećajte zaobljenost
-            opacity: 0.8, // Povećajte prozirnost
-            color: 'white', // Boja teksta
-            display: 'block', // Prikazivanje kao blok
-            height: '300px', // Povećajte visinu termina
-            width: '300px', // Povećajte širinu termina
-        },
-    })}
-/>
-      </div>
+      <div style={{ height: '900px' }}>
+            <Calendar
+                localizer={localizer}
+                events={events} 
+                startAccessor="start" k
+                endAccessor="end" 
+                style={{ height: 500 }} 
+                tooltipAccessor="title" 
+            />
+        </div>
       <h3 className="text-2xl font-bold mt-6 mb-4">Zakazivanje termina</h3>
       <BookingForm />
     </div>
